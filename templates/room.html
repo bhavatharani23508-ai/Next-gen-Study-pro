@@ -1,281 +1,692 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Study Room</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>{{ room_name }}</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+.video-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:10px;
+}
+
+video{
+    width:100%;
+    border-radius:10px;
+    background:black;
+}
+
+.spotify-player{
+    width:100%;
+    height:152px;
+    border:none;
+    border-radius:15px;
+    margin-top:15px;
+}
+
+.spotify-input{
+    width:100%;
+    margin-top:10px;
+}
+
+</style>
+
 </head>
+
 <body>
 
 <div class="container">
 
-    <h1>🔥 Study With Me</h1>
+<h1>🔥 Study With Me</h1>
 
-    <p><b>Room:</b> {{ room_name }}</p>
-    <p><b>🟢 Users Online:</b> <span id="onlineCount">0</span></p>
+<!-- ROOM INFO -->
+<div class="todo-box">
 
-    <br>
+<p><b>Room:</b> {{ room_name }}</p>
 
-    <label>Study Duration</label><br>
-    <select id="studyTime">
-        <option value="1">1 Minute</option>
-        <option value="25">25 Minutes</option>
-        <option value="50">50 Minutes</option>
-        <option value="90">90 Minutes</option>
-    </select>
+<p>
+<b>🟢 Users Online:</b>
+<span id="onlineCount">0</span>
+</p>
 
-    <br><br>
-
-    <label>Break Duration</label><br>
-    <select id="breakTime">
-        <option value="1">1 Minute</option>
-        <option value="5">5 Minutes</option>
-        <option value="10">10 Minutes</option>
-        <option value="15">15 Minutes</option>
-    </select>
-
-    <div class="timer" id="timer">00:00</div>
-
-    <h2>🔥 Daily Streak</h2>
-    <p id="streakCount">0 Day Streak</p>
-
-    <button onclick="startStudy()">▶️ Start Study</button>
-    <button onclick="startBreak()">☕ Break</button>
-    <button onclick="pauseTimer()">⏸ Pause</button>
-    <button onclick="resumeTimer()">▶ Resume</button>
-    <button onclick="stopTimer()">⏹ Stop</button>
-
-    <br><br>
-
-    <button onclick="toggleTheme()">🌙 Toggle Theme</button>
-
-    <button onclick="leaveRoom()"
-        style="background:red;color:white;padding:10px 20px;border:none;border-radius:8px;">
-        🚪 Leave Room
-    </button>
-
-    <div class="todo-box">
-        <h2>📝 Study Tasks</h2>
-        <input type="text" id="taskInput" placeholder="Enter task..." />
-        <button onclick="addTask()">Add Task</button>
-        <ul id="taskList"></ul>
-    </div>
-
-    <hr>
-
-    <h2>💬 Group Chat</h2>
-
-    <input type="text"
-           id="username"
-           placeholder="Enter your username..."
-           style="width:70%;margin-bottom:10px;" />
-
-    <br><br>
-
-    <select id="avatar"
-            style="width:70%;padding:10px;border-radius:8px;margin-bottom:15px;">
-        <option value="😀">😀 Smile</option>
-        <option value="😎">😎 Cool</option>
-        <option value="🔥">🔥 Fire</option>
-        <option value="🚀">🚀 Rocket</option>
-        <option value="🎯">🎯 Focus</option>
-        <option value="🐱">🐱 Cat</option>
-        <option value="🧠">🧠 Brain</option>
-    </select>
-
-    <div id="chat-box"
-         style="height:250px;overflow-y:auto;background:#111;padding:15px;
-         border-radius:10px;margin-top:20px;text-align:left;">
-    </div>
-
-    <p id="typing"
-       style="color:gray;font-style:italic;margin-top:10px;height:20px;">
-    </p>
-
-    <br>
-
-    <input type="text"
-           id="message"
-           placeholder="Type message..."
-           style="width:70%;" />
-
-    <button onclick="sendMessage()">Send</button>
+<p>
+<b>👥 Room Users:</b>
+<span id="roomUsers"></span>
+</p>
 
 </div>
 
+<!-- TIMER -->
+<div class="todo-box">
+
+<div class="timer" id="timer">25:00</div>
+
+<div class="timer-controls">
+
+<select id="studyTime">
+
+<option value="25">25 Min Study</option>
+<option value="50">50 Min Study</option>
+<option value="90">90 Min Study</option>
+
+</select>
+
+<select id="breakTime">
+
+<option value="5">5 Min Break</option>
+<option value="10">10 Min Break</option>
+<option value="15">15 Min Break</option>
+
+</select>
+
+</div>
+
+<br>
+
+<button onclick="startStudy()">▶ Start</button>
+
+<button onclick="startBreak()">☕ Break</button>
+
+<button onclick="pauseTimer()">⏸ Pause</button>
+
+<button onclick="resumeTimer()">▶ Resume</button>
+
+<button onclick="stopTimer()">⏹ Stop</button>
+
+</div>
+
+<!-- XP -->
+<div class="todo-box">
+
+<h2>🏆 XP Points</h2>
+
+<p id="xpCount">0 XP</p>
+
+</div>
+
+<!-- STREAK -->
+<div class="todo-box">
+
+<h2>🔥 Daily Streak</h2>
+
+<p id="streakCount">1 Day</p>
+
+</div>
+
+<!-- SPOTIFY -->
+<div class="todo-box">
+
+<h2>🎵 Spotify Music</h2>
+
+<p>
+Paste any Spotify playlist/song link below 👇
+</p>
+
+<input
+type="text"
+id="spotifyLink"
+class="spotify-input"
+placeholder="Paste Spotify playlist or song link..."
+>
+
+<button onclick="loadSpotify()">
+🎧 Load Music
+</button>
+
+<iframe
+id="spotifyPlayer"
+class="spotify-player"
+src="https://open.spotify.com/embed/playlist/37i9dQZF1DX8NTLI2TtZa6"
+allowfullscreen=""
+allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+loading="lazy">
+</iframe>
+
+</div>
+
+<!-- THEME -->
+<div class="todo-box">
+
+<h2>🎨 Theme</h2>
+
+<select onchange="changeBackground(this.value)" id="roomTheme">
+
+<option value="dark">Dark</option>
+<option value="blue">Ocean Blue</option>
+<option value="night">Night</option>
+<option value="purple">Purple</option>
+<option value="sunset">Sunset</option>
+<option value="green">Forest</option>
+<option value="pink">Pink</option>
+<option value="space">Space</option>
+
+</select>
+
+</div>
+
+<!-- TASKS -->
+<div class="todo-box">
+
+<h2>📝 Study Tasks</h2>
+
+<input
+type="text"
+id="taskInput"
+placeholder="Enter task..."
+>
+
+<button onclick="addTask()">
+Add Task
+</button>
+
+<ul id="taskList"></ul>
+
+</div>
+
+<!-- CAMERA -->
+<div class="todo-box">
+
+<h2>🎥 Study Camera</h2>
+
+<button onclick="startCamera()">
+📷 Start Camera
+</button>
+
+<button onclick="stopCamera()">
+❌ Stop Camera
+</button>
+
+<div class="video-grid">
+
+<video id="localVideo" autoplay muted></video>
+
+</div>
+
+</div>
+
+<!-- CHAT -->
+<div class="todo-box">
+
+<h2>💬 Group Chat</h2>
+
+<input
+type="text"
+id="username"
+placeholder="Enter username"
+>
+
+<select id="avatar">
+
+<option>😀</option>
+<option>😎</option>
+<option>🔥</option>
+<option>🚀</option>
+<option>📚</option>
+
+</select>
+
+<div class="chat-box" id="chat-box"></div>
+
+<p id="typing"></p>
+
+<input
+type="text"
+id="message"
+placeholder="Type message..."
+oninput="typingStatus()"
+>
+
+<button onclick="sendMessage()">
+Send
+</button>
+
+</div>
+
+<!-- LEAVE -->
+<a href="/" class="leave-btn" onclick="leaveRoom()">
+🚪 Leave Room
+</a>
+
+</div>
+
+<!-- SOCKET -->
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
 <script>
-let timer;
-let seconds = 0;
-let isPaused = false;
-
-let streak = localStorage.getItem("streak") || 0;
-let lastStudyDate = localStorage.getItem("lastStudyDate");
 
 const socket = io();
 
-window.onload = function () {
-    let username = prompt("Enter your username");
+let timer = null;
+let seconds = 1500;
+let paused = false;
+let xp = 0;
 
-    if (username) {
-        document.getElementById("username").value = username;
-        socket.send("🟢 " + username + " joined the room");
-    }
+let localStream = null;
 
-    document.getElementById("streakCount").innerHTML =
-        "🔥 " + streak + " Day Streak";
-};
+window.onload = function(){
 
+updateTimerDisplay();
+
+socket.emit("join",{
+room:"{{ room_name }}",
+username:getUser()
+});
+
+// user count
 socket.on("user_count", function(count){
-    document.getElementById("onlineCount").innerHTML = count;
+
+document.getElementById("onlineCount").innerHTML =
+count;
+
 });
 
-socket.on("message", function(msg){
-    let chatBox = document.getElementById("chat-box");
+// room users
+socket.on("room_users", function(users){
 
-    chatBox.innerHTML += "<p>" + msg + "</p>";
-    chatBox.scrollTop = chatBox.scrollHeight;
+document.getElementById("roomUsers").innerHTML =
+users.join(", ");
+
 });
 
-document.getElementById("message").addEventListener("input", function(){
-    let username = document.getElementById("username").value;
-    socket.emit("typing", username);
-});
+// xp update
+socket.on("leaderboard_update", function(data){
 
-socket.on("typing", function(data){
-    document.getElementById("typing").innerHTML =
-        "✍️ " + data + " is typing...";
+let user = getUser();
 
-    clearTimeout(window.typingTimeout);
+data.forEach(u=>{
 
-    window.typingTimeout = setTimeout(() => {
-        document.getElementById("typing").innerHTML = "";
-    }, 1000);
-});
+if(u[0] === user){
 
-function startTimer(minutes){
-    clearInterval(timer);
+document.getElementById("xpCount").innerHTML =
+u[1] + " XP";
 
-    seconds = minutes * 60;
-    isPaused = false;
-
-    timer = setInterval(updateTimer, 1000);
 }
 
-function updateTimer(){
-    if(isPaused) return;
+});
 
-    let min = Math.floor(seconds / 60);
-    let sec = seconds % 60;
+});
 
-    document.getElementById("timer").innerHTML =
-        String(min).padStart(2, "0") + ":" +
-        String(sec).padStart(2, "0");
+// streak update
+socket.on("streak_update", function(data){
 
-    if(seconds <= 0){
-        clearInterval(timer);
-        alert("⏰ Time Completed!");
-        return;
-    }
+document.getElementById("streakCount").innerHTML =
+data.count + " Day";
 
-    seconds--;
+});
+
+loadTasks();
+
+};
+function getUser(){
+
+return document.getElementById("username").value
+|| "Guest";
+
+}
+
+function loadSpotify(){
+
+let link =
+document.getElementById("spotifyLink").value;
+
+if(!link){
+
+alert("Paste Spotify link");
+
+return;
+
+}
+
+// playlist
+if(link.includes("/playlist/")){
+
+let playlistId =
+link.split("/playlist/")[1].split("?")[0];
+
+document.getElementById("spotifyPlayer").src =
+`https://open.spotify.com/embed/playlist/${playlistId}`;
+
+}
+
+// track/song
+else if(link.includes("/track/")){
+
+let trackId =
+link.split("/track/")[1].split("?")[0];
+
+document.getElementById("spotifyPlayer").src =
+`https://open.spotify.com/embed/track/${trackId}`;
+
+}
+
+// album
+else if(link.includes("/album/")){
+
+let albumId =
+link.split("/album/")[1].split("?")[0];
+
+document.getElementById("spotifyPlayer").src =
+`https://open.spotify.com/embed/album/${albumId}`;
+
+}
+
+else{
+
+alert("Invalid Spotify link");
+
+}
+
+}
+
+function changeBackground(theme){
+
+const themes = {
+
+dark:"linear-gradient(135deg,#0f0f0f,#181818)",
+
+blue:"linear-gradient(135deg,#0f2027,#203a43,#2c5364)",
+
+night:"linear-gradient(135deg,#232526,#414345)",
+
+purple:"linear-gradient(135deg,#41295a,#6a3093)",
+
+sunset:"linear-gradient(135deg,#ff7e5f,#feb47b)",
+
+green:"linear-gradient(135deg,#134e5e,#71b280)",
+
+pink:"linear-gradient(135deg,#ff9a9e,#fad0c4)",
+
+space:"linear-gradient(135deg,#000428,#004e92)"
+
+};
+
+document.body.style.background = themes[theme];
+
+localStorage.setItem("roomTheme", theme);
+
+}
+
+function startTimer(minutes){
+
+clearInterval(timer);
+
+seconds = minutes * 60;
+
+paused = false;
+
+timer = setInterval(()=>{
+
+if(!paused){
+
+if(seconds <= 0){
+
+clearInterval(timer);
+
+xp += 10;
+
+socket.emit("study_done",{
+username:getUser()
+});
+
+alert("Session Complete!");
+
+return;
+
+}
+
+seconds--;
+
+updateTimerDisplay();
+
+}
+
+},1000);
+
+}
+
+function updateTimerDisplay(){
+
+let m = Math.floor(seconds/60);
+let s = seconds%60;
+
+document.getElementById("timer").innerHTML =
+String(m).padStart(2,"0") + ":" +
+String(s).padStart(2,"0");
+
 }
 
 function startStudy(){
-    let studyMinutes =
-        document.getElementById("studyTime").value;
 
-    updateStreak();
-    startTimer(studyMinutes);
+startTimer(
+document.getElementById("studyTime").value
+);
+
 }
 
 function startBreak(){
-    let breakMinutes =
-        document.getElementById("breakTime").value;
 
-    startTimer(breakMinutes);
+startTimer(
+document.getElementById("breakTime").value
+);
+
 }
 
 function pauseTimer(){
-    isPaused = true;
+
+paused = true;
+
 }
 
 function resumeTimer(){
-    isPaused = false;
+
+paused = false;
+
 }
 
 function stopTimer(){
-    clearInterval(timer);
-    seconds = 0;
-    document.getElementById("timer").innerHTML = "00:00";
+
+clearInterval(timer);
+
+seconds = 1500;
+
+updateTimerDisplay();
+
 }
 
-function updateStreak(){
-    let today = new Date().toDateString();
-
-    if(lastStudyDate !== today){
-        streak++;
-        localStorage.setItem("streak", streak);
-        localStorage.setItem("lastStudyDate", today);
-        lastStudyDate = today;
-    }
-
-    document.getElementById("streakCount").innerHTML =
-        "🔥 " + streak + " Day Streak";
-}
-
-function toggleTheme(){
-    document.body.classList.toggle("light");
-}
 
 function addTask(){
-    let taskInput = document.getElementById("taskInput");
 
-    if(taskInput.value.trim() === "") return;
+let t =
+document.getElementById("taskInput").value;
 
-    let li = document.createElement("li");
+if(!t) return;
 
-    li.innerHTML =
-        taskInput.value +
-        ' <button onclick="this.parentElement.remove()">❌</button>';
+let tasks =
+JSON.parse(localStorage.getItem("tasks")) || [];
 
-    document.getElementById("taskList").appendChild(li);
+tasks.push(t);
 
-    taskInput.value = "";
+localStorage.setItem(
+"tasks",
+JSON.stringify(tasks)
+);
+
+loadTasks();
+
+}
+
+function loadTasks(){
+
+let tasks =
+JSON.parse(localStorage.getItem("tasks")) || [];
+
+let list =
+document.getElementById("taskList");
+
+list.innerHTML = "";
+
+tasks.forEach((t,i)=>{
+
+list.innerHTML +=
+`<li>${t}
+<button onclick="deleteTask(${i})">
+❌
+</button>
+</li>`;
+
+});
+
+}
+
+function deleteTask(i){
+
+let tasks =
+JSON.parse(localStorage.getItem("tasks")) || [];
+
+tasks.splice(i,1);
+
+localStorage.setItem(
+"tasks",
+JSON.stringify(tasks)
+);
+
+loadTasks();
+
 }
 
 function sendMessage(){
-    let username = document.getElementById("username").value;
-    let avatar = document.getElementById("avatar").value;
-    let message = document.getElementById("message").value;
 
-    if(message.trim() === "") return;
+let msg =
+document.getElementById("message").value;
 
-    socket.send(avatar + " " + username + ": " + message);
+if(!msg) return;
 
-    document.getElementById("message").value = "";
-}
+socket.send({
 
-document.getElementById("message")
-.addEventListener("keypress", function(e){
-    if(e.key === "Enter"){
-        sendMessage();
-    }
+room:"{{ room_name }}",
+
+msg:
+document.getElementById("avatar").value +
+" " +
+getUser() +
+": " +
+msg,
+
+username:getUser()
+
 });
 
-function leaveRoom(){
-    let username = document.getElementById("username").value;
+document.getElementById("message").value = "";
 
-    socket.send("🔴 " + username + " left the room");
-
-    if(confirm("Leave room?")){
-        window.location.href = "/";
-    }
 }
+
+socket.on("message", function(msg){
+
+document.getElementById("chat-box").innerHTML +=
+"<div class='chat-message'>" +
+msg +
+"</div>";
+
+});
+
+function typingStatus(){
+
+socket.emit("typing",{
+
+room:"{{ room_name }}",
+
+username:getUser()
+
+});
+
+}
+
+socket.on("typing", function(data){
+
+document.getElementById("typing").innerHTML =
+data.username + " is typing...";
+
+setTimeout(()=>{
+
+document.getElementById("typing").innerHTML = "";
+
+},1000);
+
+});
+
+async function startCamera(){
+
+localStream =
+await navigator.mediaDevices.getUserMedia({
+
+video:true,
+audio:true
+
+});
+
+document.getElementById("localVideo").srcObject =
+localStream;
+
+socket.emit("camera_toggle",{
+
+room:"{{ room_name }}",
+
+username:getUser(),
+
+camera:true
+
+});
+
+}
+
+function stopCamera(){
+
+if(localStream){
+
+localStream.getTracks().forEach(t=>t.stop());
+
+}
+
+socket.emit("camera_toggle",{
+
+room:"{{ room_name }}",
+
+username:getUser(),
+
+camera:false
+
+});
+
+}
+
+
+function leaveRoom(){
+
+socket.emit("leave",{
+
+room:"{{ room_name }}",
+
+username:getUser()
+
+});
+
+}
+
+if(localStorage.getItem("roomTheme")){
+
+changeBackground(
+localStorage.getItem("roomTheme")
+);
+
+}
+
 </script>
 
 </body>
