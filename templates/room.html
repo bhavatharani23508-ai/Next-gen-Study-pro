@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Study Room</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+<div class="container">
+
+    <h1>🔥 Study With Me</h1>
+
+    <p><b>Room:</b> {{ room_name }}</p>
+    <p><b>🟢 Users Online:</b> <span id="onlineCount">0</span></p>
+
+    <br>
+
+    <label>Study Duration</label><br>
+    <select id="studyTime">
+        <option value="1">1 Minute</option>
+        <option value="25">25 Minutes</option>
+        <option value="50">50 Minutes</option>
+        <option value="90">90 Minutes</option>
+    </select>
+
+    <br><br>
+
+    <label>Break Duration</label><br>
+    <select id="breakTime">
+        <option value="1">1 Minute</option>
+        <option value="5">5 Minutes</option>
+        <option value="10">10 Minutes</option>
+        <option value="15">15 Minutes</option>
+    </select>
+
+    <div class="timer" id="timer">00:00</div>
+
+    <h2>🔥 Daily Streak</h2>
+    <p id="streakCount">0 Day Streak</p>
+
+    <button onclick="startStudy()">▶️ Start Study</button>
+    <button onclick="startBreak()">☕ Break</button>
+    <button onclick="pauseTimer()">⏸ Pause</button>
+    <button onclick="resumeTimer()">▶ Resume</button>
+    <button onclick="stopTimer()">⏹ Stop</button>
+
+    <br><br>
+
+    <button onclick="toggleTheme()">🌙 Toggle Theme</button>
+
+    <button onclick="leaveRoom()"
+        style="background:red;color:white;padding:10px 20px;border:none;border-radius:8px;">
+        🚪 Leave Room
+    </button>
+
+    <div class="todo-box">
+        <h2>📝 Study Tasks</h2>
+        <input type="text" id="taskInput" placeholder="Enter task..." />
+        <button onclick="addTask()">Add Task</button>
+        <ul id="taskList"></ul>
+    </div>
+
+    <hr>
+
+    <h2>💬 Group Chat</h2>
+
+    <input type="text"
+           id="username"
+           placeholder="Enter your username..."
+           style="width:70%;margin-bottom:10px;" />
+
+    <br><br>
+
+    <select id="avatar"
+            style="width:70%;padding:10px;border-radius:8px;margin-bottom:15px;">
+        <option value="😀">😀 Smile</option>
+        <option value="😎">😎 Cool</option>
+        <option value="🔥">🔥 Fire</option>
+        <option value="🚀">🚀 Rocket</option>
+        <option value="🎯">🎯 Focus</option>
+        <option value="🐱">🐱 Cat</option>
+        <option value="🧠">🧠 Brain</option>
+    </select>
+
+    <div id="chat-box"
+         style="height:250px;overflow-y:auto;background:#111;padding:15px;
+         border-radius:10px;margin-top:20px;text-align:left;">
+    </div>
+
+    <p id="typing"
+       style="color:gray;font-style:italic;margin-top:10px;height:20px;">
+    </p>
+
+    <br>
+
+    <input type="text"
+           id="message"
+           placeholder="Type message..."
+           style="width:70%;" />
+
+    <button onclick="sendMessage()">Send</button>
+
+</div>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<script>
+let timer;
+let seconds = 0;
+let isPaused = false;
+
+let streak = localStorage.getItem("streak") || 0;
+let lastStudyDate = localStorage.getItem("lastStudyDate");
+
+const socket = io();
+
+window.onload = function () {
+    let username = prompt("Enter your username");
+
+    if (username) {
+        document.getElementById("username").value = username;
+        socket.send("🟢 " + username + " joined the room");
+    }
+
+    document.getElementById("streakCount").innerHTML =
+        "🔥 " + streak + " Day Streak";
+};
+
+socket.on("user_count", function(count){
+    document.getElementById("onlineCount").innerHTML = count;
+});
+
+socket.on("message", function(msg){
+    let chatBox = document.getElementById("chat-box");
+
+    chatBox.innerHTML += "<p>" + msg + "</p>";
+    chatBox.scrollTop = chatBox.scrollHeight;
+});
+
+document.getElementById("message").addEventListener("input", function(){
+    let username = document.getElementById("username").value;
+    socket.emit("typing", username);
+});
+
+socket.on("typing", function(data){
+    document.getElementById("typing").innerHTML =
+        "✍️ " + data + " is typing...";
+
+    clearTimeout(window.typingTimeout);
+
+    window.typingTimeout = setTimeout(() => {
+        document.getElementById("typing").innerHTML = "";
+    }, 1000);
+});
+
+function startTimer(minutes){
+    clearInterval(timer);
+
+    seconds = minutes * 60;
+    isPaused = false;
+
+    timer = setInterval(updateTimer, 1000);
+}
+
+function updateTimer(){
+    if(isPaused) return;
+
+    let min = Math.floor(seconds / 60);
+    let sec = seconds % 60;
+
+    document.getElementById("timer").innerHTML =
+        String(min).padStart(2, "0") + ":" +
+        String(sec).padStart(2, "0");
+
+    if(seconds <= 0){
+        clearInterval(timer);
+        alert("⏰ Time Completed!");
+        return;
+    }
+
+    seconds--;
+}
+
+function startStudy(){
+    let studyMinutes =
+        document.getElementById("studyTime").value;
+
+    updateStreak();
+    startTimer(studyMinutes);
+}
+
+function startBreak(){
+    let breakMinutes =
+        document.getElementById("breakTime").value;
+
+    startTimer(breakMinutes);
+}
+
+function pauseTimer(){
+    isPaused = true;
+}
+
+function resumeTimer(){
+    isPaused = false;
+}
+
+function stopTimer(){
+    clearInterval(timer);
+    seconds = 0;
+    document.getElementById("timer").innerHTML = "00:00";
+}
+
+function updateStreak(){
+    let today = new Date().toDateString();
+
+    if(lastStudyDate !== today){
+        streak++;
+        localStorage.setItem("streak", streak);
+        localStorage.setItem("lastStudyDate", today);
+        lastStudyDate = today;
+    }
+
+    document.getElementById("streakCount").innerHTML =
+        "🔥 " + streak + " Day Streak";
+}
+
+function toggleTheme(){
+    document.body.classList.toggle("light");
+}
+
+function addTask(){
+    let taskInput = document.getElementById("taskInput");
+
+    if(taskInput.value.trim() === "") return;
+
+    let li = document.createElement("li");
+
+    li.innerHTML =
+        taskInput.value +
+        ' <button onclick="this.parentElement.remove()">❌</button>';
+
+    document.getElementById("taskList").appendChild(li);
+
+    taskInput.value = "";
+}
+
+function sendMessage(){
+    let username = document.getElementById("username").value;
+    let avatar = document.getElementById("avatar").value;
+    let message = document.getElementById("message").value;
+
+    if(message.trim() === "") return;
+
+    socket.send(avatar + " " + username + ": " + message);
+
+    document.getElementById("message").value = "";
+}
+
+document.getElementById("message")
+.addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        sendMessage();
+    }
+});
+
+function leaveRoom(){
+    let username = document.getElementById("username").value;
+
+    socket.send("🔴 " + username + " left the room");
+
+    if(confirm("Leave room?")){
+        window.location.href = "/";
+    }
+}
+</script>
+
+</body>
+</html>
