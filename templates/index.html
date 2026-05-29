@@ -1,82 +1,523 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study With Me</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Study With Me</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+.room-card{
+    padding:15px;
+    margin:10px 0;
+    background:rgba(255,255,255,0.05);
+    border-radius:12px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+.join-btn{
+    padding:8px 15px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:#4caf50;
+    color:white;
+    font-size:14px;
+}
+
+.badge{
+    font-size:12px;
+    padding:4px 10px;
+    border-radius:10px;
+    background:orange;
+    color:black;
+    margin-left:8px;
+}
+
+.refresh-btn{
+    background:#00bcd4;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:12px;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+.refresh-btn:hover{
+    transform:scale(1.05);
+}
+
+.leader-card{
+    padding:12px;
+    margin:10px 0;
+    background:rgba(255,255,255,0.05);
+    border-radius:12px;
+    text-align:left;
+    border-left:4px solid gold;
+}
+
+.spotify-player{
+    width:100%;
+    height:152px;
+    border:none;
+    border-radius:15px;
+    margin-top:15px;
+}
+
+.spotify-input{
+    width:100%;
+    margin-top:10px;
+}
+
+</style>
+
 </head>
+
 <body>
 
 <div class="container">
 
-    <h1>📚 Study With Me</h1>
+<h1>📚 Study With Me</h1>
 
-    <p class="subtitle">
-        Focus • Study • Grow 🚀
-    </p>
+<p class="subtitle">
+Focus • Study • Grow 🚀
+</p>
 
-    <h2>Create Room</h2>
+<!-- THEME -->
+<div class="todo-box">
 
-    <form action="/create_room" method="POST">
+<h2>🎨 Choose Theme</h2>
 
-        <input
-            type="text"
-            name="room_name"
-            placeholder="Enter Room Name"
-            required
-        >
+<select id="themeSelect" onchange="changeBackground(this.value)">
 
-        <br>
+<option value="linear-gradient(135deg,#121212,#1e1e1e)">
+Dark
+</option>
 
-        <input
-            type="password"
-            name="password"
-            placeholder="Enter Password"
-            required
-        >
+<option value="linear-gradient(135deg,#203a43,#2c5364)">
+Ocean Blue
+</option>
 
-        <br>
+<option value="linear-gradient(135deg,#355c7d,#6c5b7b)">
+Night Sky
+</option>
 
-        <button type="submit">
-            Create Room
-        </button>
+<option value="linear-gradient(135deg,#6a3093,#a044ff)">
+Purple Focus
+</option>
 
-    </form>
+<option value="linear-gradient(135deg,#2d6a4f,#52b788)">
+Nature Green
+</option>
 
-    <hr>
+<option value="linear-gradient(135deg,#ff512f,#dd2476)">
+Sunset
+</option>
 
-    <h2>Join Room</h2>
+<option value="linear-gradient(135deg,#f7971e,#ffd200)">
+Golden
+</option>
 
-    <form action="/join_room" method="POST">
+<option value="linear-gradient(135deg,#fc5c7d,#6a82fb)">
+Pink Glow
+</option>
 
-        <input
-            type="text"
-            name="room_name"
-            placeholder="Enter Room Name"
-            required
-        >
+<option value="linear-gradient(135deg,#00c6ff,#0072ff)">
+Sky Blue
+</option>
 
-        <br>
+<option value="linear-gradient(135deg,#141e30,#243b55)">
+Midnight
+</option>
 
-        <input
-            type="password"
-            name="password"
-            placeholder="Enter Password"
-            required
-        >
+<option value="linear-gradient(135deg,#83a4d4,#b6fbff)">
+Ice
+</option>
 
-        <br>
-
-        <button type="submit">
-            Join Room
-        </button>
-
-    </form>
+</select>
 
 </div>
+
+<!-- USERNAME -->
+<div class="todo-box">
+
+<h2>👤 Your Name</h2>
+
+<input
+type="text"
+id="username"
+placeholder="Enter your name..."
+style="width:100%;padding:12px;border-radius:10px;border:none;"
+>
+
+</div>
+
+<!-- CREATE ROOM -->
+<div class="todo-box">
+
+<h2>➕ Create Room</h2>
+
+<form action="/create_room" method="POST">
+
+<input
+type="text"
+name="room_name"
+placeholder="Room Name"
+required
+>
+
+<br><br>
+
+<input
+type="password"
+name="password"
+placeholder="Password"
+required
+>
+
+<br><br>
+
+<select name="room_type">
+
+<option value="public">
+Public
+</option>
+
+<option value="private">
+Private
+</option>
+
+</select>
+
+<br><br>
+
+<button type="submit">
+Create Room 🚀
+</button>
+
+</form>
+
+</div>
+
+<!-- JOIN ROOM -->
+<div class="todo-box">
+
+<h2>🔑 Join Room</h2>
+
+<form action="/join_room" method="POST">
+
+<input
+type="text"
+name="room_name"
+placeholder="Room Name"
+required
+>
+
+<br><br>
+
+<input
+type="password"
+name="password"
+placeholder="Password"
+>
+
+<br><br>
+
+<button type="submit">
+Join Room 📚
+</button>
+
+</form>
+
+</div>
+
+<!-- AVAILABLE ROOMS -->
+<div class="todo-box">
+
+<h2>🌍 Available Rooms</h2>
+
+<form action="/refresh_rooms">
+
+<button type="submit" class="refresh-btn">
+🔄 Refresh Rooms
+</button>
+
+</form>
+
+<br>
+
+{% if rooms %}
+
+    {% for room in rooms %}
+
+    <div class="room-card">
+
+        <div>
+
+            📚 <b>{{ room[0] }}</b>
+
+            {% if room[1] == "private" %}
+
+                <span class="badge">
+                Private
+                </span>
+
+            {% else %}
+
+                <span class="badge">
+                Public
+                </span>
+
+            {% endif %}
+
+        </div>
+
+        <form action="/join_room" method="POST">
+
+            <input
+            type="hidden"
+            name="room_name"
+            value="{{ room[0] }}"
+            >
+
+            <input
+            type="hidden"
+            name="password"
+            value=""
+            >
+
+            <button class="join-btn">
+            Join
+            </button>
+
+        </form>
+
+    </div>
+
+    {% endfor %}
+
+{% else %}
+
+<p>
+No active rooms available 🚀
+</p>
+
+{% endif %}
+
+</div>
+
+<!-- SPOTIFY MUSIC -->
+<div class="todo-box">
+
+<h2>🎵 Spotify Music</h2>
+
+<p>
+Paste any Spotify playlist/song link below 👇
+</p>
+
+<input
+type="text"
+id="spotifyLink"
+class="spotify-input"
+placeholder="Paste Spotify playlist or song link..."
+>
+
+<button onclick="loadSpotify()">
+🎧 Load Music
+</button>
+
+<iframe
+id="spotifyPlayer"
+class="spotify-player"
+src="https://open.spotify.com/embed/playlist/37i9dQZF1DX8NTLI2TtZa6"
+allowfullscreen=""
+allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+loading="lazy">
+</iframe>
+
+</div>
+
+<!-- LEADERBOARD -->
+<div class="todo-box">
+
+<h2>🏆 Top Focusers</h2>
+
+<div id="leaderboard">
+
+<div class="leader-card">
+No leaderboard data yet 🚀
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SOCKET -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<script>
+
+const socket = io();
+
+
+window.onload = function(){
+
+// theme
+let savedTheme =
+localStorage.getItem("theme");
+
+if(savedTheme){
+
+document.body.style.background =
+savedTheme;
+
+document.getElementById("themeSelect").value =
+savedTheme;
+
+}
+
+// username
+let savedName =
+localStorage.getItem("username");
+
+if(savedName){
+
+document.getElementById("username").value =
+savedName;
+
+}
+
+};
+
+
+function changeBackground(theme){
+
+document.body.style.background = theme;
+
+localStorage.setItem("theme", theme);
+
+}
+
+// ---------------- SAVE USERNAME ----------------
+
+document.getElementById("username")
+.addEventListener("input", function(){
+
+localStorage.setItem(
+"username",
+this.value
+);
+
+});
+function loadSpotify(){
+
+let link =
+document.getElementById("spotifyLink").value;
+
+if(!link){
+
+alert("Paste Spotify link");
+
+return;
+
+}
+
+// playlist
+if(link.includes("/playlist/")){
+
+let playlistId =
+link.split("/playlist/")[1].split("?")[0];
+
+document.getElementById("spotifyPlayer").src =
+`https://open.spotify.com/embed/playlist/${playlistId}`;
+
+}
+
+// song
+else if(link.includes("/track/")){
+
+let trackId =
+link.split("/track/")[1].split("?")[0];
+
+document.getElementById("spotifyPlayer").src =
+`https://open.spotify.com/embed/track/${trackId}`;
+
+}
+
+// album
+else if(link.includes("/album/")){
+
+let albumId =
+link.split("/album/")[1].split("?")[0];
+
+document.getElementById("spotifyPlayer").src =
+`https://open.spotify.com/embed/album/${albumId}`;
+
+}
+
+else{
+
+alert("Invalid Spotify link");
+
+}
+
+}
+
+
+socket.on("leaderboard_update", function(data){
+
+let html = "";
+
+if(data.length === 0){
+
+html = `
+<div class="leader-card">
+No leaderboard data yet 🚀
+</div>
+`;
+
+}
+
+data.forEach((user,index)=>{
+
+html += `
+
+<div class="leader-card">
+
+🏅 <b>#${index + 1}</b>
+
+&nbsp;&nbsp;
+
+${user[0]}
+
+&nbsp;—&nbsp;
+
+${user[1]} XP
+
+</div>
+
+`;
+
+});
+
+document.getElementById("leaderboard").innerHTML =
+html;
+
+});
+
+</script>
 
 </body>
 </html>
