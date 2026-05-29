@@ -1,63 +1,9 @@
-📚 Study Planner App
-A Flask‑based web application designed to help students organize study sessions, manage tasks, and collaborate in secure rooms. The app allows users to create rooms with passwords, add tasks with deadlines, and view progress, making group study more structured and efficient.
+📚 Study With Me
 
-🚀 Features
-Room Management: Create and join study rooms with password protection.
+Study With Me is a modern real-time virtual study room web application developed using Python, Flask, Flask-SocketIO, HTML, CSS, JavaScript, SQLite, and WebRTC technologies. This platform is designed to help students improve focus, productivity, and consistency while studying online with friends or other learners around the world.
 
-Task Management: Add tasks with deadlines to specific rooms.
+The application allows users to create or join public and private study rooms with secure password protection. It includes a live group chat system, real-time online user tracking, and active room management using Flask-SocketIO for instant communication. Users can stay productive with a built-in Pomodoro study timer, daily streak tracking, XP reward system, and a dynamic leaderboard that motivates users through gamified learning.
 
-Deadline Tracking: Keep track of upcoming assignments and study goals.
+To create an engaging study environment, the app also provides custom theme selection, study task management, and camera support for virtual study sessions using browser media devices. One of the major features of the project is the Spotify integration, where users can directly paste Spotify playlist, song, or album links and listen to their favorite music while studying inside the app itself.
 
-Progress View: Display tasks in a structured format for each room.
-
-Simple UI: Forms for room creation, joining, and task addition.
-
-🛠️ Tech Stack
-Backend: Flask (Python)
-
-Frontend: HTML, CSS (templates)
-
-Data Storage: In‑memory dictionary (can be extended to SQLite/MySQL)
-
-Utilities: Webbrowser auto‑open, threading for startup
-
-📂 Project Structure
-Code
-Study-Planner/
-│── app.py              # Main Flask application
-│── templates/
-│   ├── index.html       # Home page (create/join room, add tasks)
-│   ├── tasks.html       # Task view page
-│── static/
-│   └── style.css        # Styling
-⚡ Getting Started
-Clone the repository:
-
-bash
-git clone https://github.com/your-username/study-planner.git
-cd study-planner
-Create a virtual environment and install Flask:
-
-bash
-python -m venv .venv
-.venv\Scripts\activate   # Windows
-pip install flask
-Run the app:
-
-bash
-python app.py
-Open in browser: http://127.0.0.1:5000
-
-🎯 Future Enhancements
-User authentication (Flask‑Login)
-
-Database integration (SQLite/MySQL)
-
-Calendar view for deadlines
-
-Notifications/reminders for tasks
-
-File sharing (notes, PDFs)
-
-📖 License
-This project is open‑source under the MIT License.
+The project features a fully responsive and visually modern UI with glassmorphism design effects, making it suitable for both desktop and mobile devices. This application demonstrates the implementation of real-time web communication, authentication logic, database management, frontend-backend integration, media streaming concepts, and interactive UI/UX design in a single full-stack Python project.
