@@ -1,0 +1,244 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100vw;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+    overflow-x: hidden;
+    color: white;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+.container {
+    width: 100vw;
+    min-height: 100vh;
+    padding: 50px;
+    background: rgba(20, 20, 20, 0.96);
+    backdrop-filter: blur(12px);
+    text-align: center;
+    box-shadow:
+        0 0 15px #ff9800,
+        0 0 50px rgba(255, 152, 0, 0.4);
+    transition: 0.4s ease;
+}
+
+h1 {
+    color: #ff9800;
+    font-size: 65px;
+    margin-bottom: 15px;
+    text-shadow:
+        0 0 10px #ff9800,
+        0 0 25px #ff9800,
+        0 0 50px #ff9800;
+}
+
+.subtitle {
+    opacity: 0.9;
+    font-size: 22px;
+    margin-bottom: 45px;
+}
+
+h2,
+label,
+p {
+    color: white;
+}
+
+h2 {
+    margin-top: 35px;
+    margin-bottom: 25px;
+    font-size: 42px;
+}
+
+input,
+select {
+    width: 60%;
+    padding: 18px;
+    margin: 15px 0;
+    border: none;
+    border-radius: 16px;
+    background: #2b2b2b;
+    color: white;
+    font-size: 17px;
+    outline: none;
+    transition: 0.3s;
+    box-shadow: 0 0 8px rgba(255,255,255,0.1);
+}
+
+input:focus,
+select:focus {
+    box-shadow:
+        0 0 12px #ff9800,
+        0 0 25px #ff9800;
+}
+
+button {
+    padding: 16px 28px;
+    margin: 12px;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    background: #ff9800;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    transition: 0.3s;
+    box-shadow: 0 0 12px #ff9800;
+}
+
+button:hover {
+    transform: scale(1.08);
+    background: #ffa726;
+    box-shadow:
+        0 0 22px #ff9800,
+        0 0 45px #ff9800;
+}
+
+.timer {
+    font-size: 110px;
+    font-weight: bold;
+    margin: 45px 0;
+    color: white;
+    text-shadow:
+        0 0 10px #00e5ff,
+        0 0 30px #00e5ff,
+        0 0 60px #00e5ff;
+}
+
+.todo-box {
+    margin-top: 50px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+li {
+    background: rgba(255,255,255,0.08);
+    margin: 15px auto;
+    padding: 18px;
+    border-radius: 14px;
+    width: 65%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+}
+
+li:hover {
+    transform: scale(1.02);
+    background: rgba(255,255,255,0.12);
+}
+
+.leave-btn {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 15px 28px;
+    border-radius: 14px;
+    background: crimson;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.leave-btn:hover {
+    transform: scale(1.08);
+    background: red;
+    box-shadow: 0 0 22px crimson;
+}
+
+hr {
+    width: 90%;
+    margin: 45px auto;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Light Theme */
+
+body.light {
+    background: #f2f2f2;
+    color: #121212;
+}
+
+body.light .container {
+    background: white;
+    color: #121212;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+body.light h1 {
+    color: #ff5722;
+    text-shadow: none;
+}
+
+body.light h2,
+body.light label,
+body.light p {
+    color: #121212;
+}
+
+body.light input,
+body.light select {
+    background: #e0e0e0;
+    color: #121212;
+    box-shadow: none;
+}
+
+body.light .timer {
+    color: #333;
+    text-shadow: none;
+}
+
+body.light button {
+    background: #2196f3;
+    box-shadow: 0 0 10px #2196f3;
+}
+
+body.light button:hover {
+    background: #42a5f5;
+    box-shadow: 0 0 20px #2196f3;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 25px;
+    }
+
+    h1 {
+        font-size: 42px;
+    }
+
+    h2 {
+        font-size: 30px;
+    }
+
+    .timer {
+        font-size: 70px;
+    }
+
+    input,
+    select {
+        width: 95%;
+    }
+
+    li {
+        width: 95%;
+    }
+}
