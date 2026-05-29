@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study With Me</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>📚 Study With Me</h1>
+
+    <p class="subtitle">
+        Focus • Study • Grow 🚀
+    </p>
+
+    <h2>Create Room</h2>
+
+    <form action="/create_room" method="POST">
+
+        <input
+            type="text"
+            name="room_name"
+            placeholder="Enter Room Name"
+            required
+        >
+
+        <br>
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            required
+        >
+
+        <br>
+
+        <button type="submit">
+            Create Room
+        </button>
+
+    </form>
+
+    <hr>
+
+    <h2>Join Room</h2>
+
+    <form action="/join_room" method="POST">
+
+        <input
+            type="text"
+            name="room_name"
+            placeholder="Enter Room Name"
+            required
+        >
+
+        <br>
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            required
+        >
+
+        <br>
+
+        <button type="submit">
+            Join Room
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
